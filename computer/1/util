@@ -1,0 +1,191 @@
+--[[
+Include this file with
+	dofile("util");
+
+]]--
+
+T=turtle; -- shorter code
+T.left = T.turnLeft;
+T.right = T.turnRight;
+T.turnFull = function()
+	T.left();
+	T.left();
+end
+
+nonSolidBlockNames = {
+	"minecraft:air", --> Not the offical name!
+	
+	"minecraft:fire",
+	"minecraft:lava", 
+	"minecraft:flowing_lava",
+	
+	"minecraft:water",
+	"minecraft:flowing_water",
+	
+	-- Plants --
+	"minecraft:red_flower",
+	"minecraft:yellow_flower",
+	"minecraft:deadbush",
+	"minecraft:tallgrass",
+	"minecraft:vine",
+	"minecraft:waterlily",
+	"minecraft:red_mushroom",
+	"minecraft:borwn_mushroom",
+	"minecraft:snowlayer",
+	"minecraft:double_plant",
+};
+
+oreBlockNames = {
+	"minecraft:coal_ore",
+	"minecraft:iron_ore",
+	
+	"minecraft:gold_ore",
+	"minecraft:lapis_ore",
+	"minecraft:redstone_ore",
+	
+	"minecraft:diamond_ore",
+	"minecraft:emerald_ore",
+	"minecraft:quart_ore",
+	"minecraft:glowstone",
+	"minecraft:soul_sand",
+	"minecraft:obsidian"
+};
+
+function placeFirstDown(startS,endS)
+	for i=startS,endS do
+		T.select(i);
+		local a = T.placeDown();
+		if a then
+			return true; -- successs
+		end
+	end
+	return false;
+end
+
+function isSolid(a,b)
+	if (not a) then
+		return false; -- Air!
+	end;
+	return not isElement(b.name,nonSolidBlockNames);
+end
+
+function isElement(element, array)
+	for key, value in pairs(array) do
+		if value == element then
+			return true, value;
+		end
+	end	
+	return false;
+end
+
+function selectNext()
+	local slot = T.getSelectedSlot();
+	slot = (slot)%16 + 1; -- 16 => 0+1  
+	T.select(slot);
+end
+
+--- TIMER ---
+function timerStart()
+	local a=os.time()*50;
+	local b=os.day()*24*60*60;
+
+	return a+b;
+end
+
+
+function timerRead(startValue)
+	local a=os.time()*50;
+	local b=os.day()*24*60*60;
+	
+	return (a+b) - startValue;
+end
+
+function iif(bool,tVal,fVal)
+	if     bool == true  then return tVal;
+	elseif bool == false then return fVal;
+	end
+	
+	return nil;
+end
+
+function fillPillarDown(depth,startS,endS)
+	local n =0;
+	while true do
+		if n==depth then break; end;
+		
+		a = T.down(); -- try moving
+		if not a then -- no moving possible, abort
+			break;
+		else -- sucessfully moved
+			n = n+1;
+		end
+	end
+	
+	for i = 1,n do
+		T.up();
+		placeFirstDown(startS,endS);
+
+	end
+
+end
+
+function rect(height,width,buildOnTheRight,action)
+--[[
+moves over a rectangle, height is the direction the turtle is facing and width is on the right or left of the 
+turtle(depending on the varaible buildOnTheRight) in each visited block actiob(x,y) is called, where x,y are 
+the coordiantes of the block starting with (1,1).
+
+example use:
+
+function a(x,y)
+	if (x+y)%2==0 then -- creates a checker board pattern
+		T.placeDonw()
+	end
+end
+rect(10,10,true,a) 
+
+
+--]]
+
+	for i = 1,width do
+		for j =1,height do
+			local y = iif(i%2==1,j,height-j+1);
+			local x = i;
+			-- Action for the block x,y
+			action(x,y);
+			-- Movement part
+			if j==height then break; end; -- omit the following part after in the last iteration 
+			
+			if     i%2 == 1 then	T.forward(); -- odd
+			elseif i%2 == 0 then	T.back()   ; -- even
+			end
+		end
+		
+		if i == width then	break end;  -- omit the following part after in the last iteration
+		
+		if buildOnTheRight then
+			T.turnRight();
+			T.forward();
+			T.turnLeft();
+		else
+			T.turnLeft();
+			T.forward();
+			T.turnRight();
+		end
+	end
+end
+
+function selectItem(itemName)
+	local a = T.getSelectedSlot();
+	for i=1,16 do
+		T.select(i);
+		local item = T.getItemDetail();
+		if ((item ~= nil) and ( item.name==itemName)) then
+			return true
+		end
+		-- not the right item, continue
+	end
+	-- no item found
+	T.select(a);
+	return false;
+end

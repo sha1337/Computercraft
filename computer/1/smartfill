@@ -1,0 +1,25 @@
+dofile("util");
+
+
+
+T.forward();
+T.down();
+T.turnRight();
+T.turnRight();
+while true do 
+	fillPillarDown(depth,startS,endS);
+	a = isSolid(T.inspect())
+	if a then --> Wall infront, move
+		T.turnRight();
+		b = isSolid(T.inspect());
+		if b then -- inner corner, turn
+			T.right();
+		else --> no corner, move
+			T.forward();
+			T.left();
+		end
+	else --> no wall , outer corner
+		T.forward();
+		T.left()
+	end
+end

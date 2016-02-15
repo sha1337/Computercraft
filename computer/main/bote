@@ -1,0 +1,32 @@
+T = turtle;
+term.clear();
+term.setCursorPos(1,1);
+dist = 0;
+
+while true do
+
+  while T.forward() do
+    write(".");
+    dist = dist +1;
+  end;
+  
+  -- Moving failed at this point
+  
+  a,b = T.forward();
+
+  if(b =="Out of fuel") then
+    T.select(1); -->fuelfrom first slot
+    s = T.refuel(1);
+    if s then 
+      write("*");
+    else
+      write("\n No Fuel at slot 1.");
+      break;
+    end;
+  else
+    break;
+  end
+end
+write("\n Traveled distance: ")
+write(dist); 
+write("\n");

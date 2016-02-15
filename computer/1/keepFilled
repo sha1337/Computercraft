@@ -1,0 +1,33 @@
+dofile("util");
+
+b = 0;
+term.clear();
+dur = (...);
+dur = tonumber(dur);
+
+start = timerStart();
+while timerRead(start) <= dur do
+	if T.place() then
+		b=b+1;
+		redstone.setAnalogOutput("back",15);
+		sleep(.2);
+		redstone.setAnalogOutput("back",0);
+	end
+	if (T.getItemCount()<=0 ) then
+		selectNext();
+	end	
+	
+	term.clear();
+	local t    = timerRead(start);
+	      t    = math.floor(t        *100)/100
+	local rate = math.floor(b/t      *100)/100;
+	local est  = math.floor(b * dur/t*100)/100;
+	local left = math.floor((dur - t)*100)/100;
+	
+	print("Placed Blocks               :  ".. b      );
+	print("Blocks per second           :  ".. rate   );
+	print("seconds left                :  ".. left   );
+	print("Estimated conspumption      :  "..(est-b) );
+	print("Estimated total consumption :  ".. est    );
+	sleep(.3);
+end

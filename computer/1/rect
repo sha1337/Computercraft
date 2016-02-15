@@ -1,0 +1,20 @@
+dofile("util");
+ 
+ function action(x,y)
+	local a,b = T.inspectDown();
+	if ( b.name == "minecraft:lit_pumpkin" )  then
+		T.digDown();
+		placeFirstDown(1,14);
+	end
+	
+	local c = false;
+	c = c or (x%6==1) and (y%6==1)
+	c = c or (x%6==4) and (y%6==4)
+	
+	if c then
+		T.digDown();
+		placeFirstDown(15,16);
+	end
+ end
+ 
+ rect(34,32,true,action)

@@ -1,0 +1,3 @@
+a = turtle.getFuelLevel();
+b = turtle.getFuelLimit();
+print("Fuel: " .. a .. " / " .. b  .. ".");

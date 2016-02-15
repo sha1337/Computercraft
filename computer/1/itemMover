@@ -1,0 +1,15 @@
+while true do
+  term.clear();
+  write("itemMover started:");
+  while redstone.getAnalogInput("left") do
+    turtle.suck()
+    a=turtle.getItemCount();
+    if(a>0) then
+      b=turtle.getItemDetail();
+      b=b.name;
+      write("\n "..a.." x "..b);
+      turtle.dropDown();
+    end
+  end
+  sleep(1);
+end

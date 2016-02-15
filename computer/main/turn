@@ -1,0 +1,3 @@
+T=turtle;
+T.turnLeft();
+T.turnLeft();

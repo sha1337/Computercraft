@@ -1,0 +1,22 @@
+dofile("util");
+dist = 0;
+
+--no floor on the first tile
+if not isSolid(T.inspectDown()) then 
+	placeFirstDown(1,16)
+end;
+
+T.forward();
+while not isSolid(T.inspectDown()) do
+	if not placeFirstDown(1,16) then -- place and handle empty inventory
+		print("No more Block so place");
+		break;
+	end
+	if not T.forward() then -- move and handle obsticals
+		print("Obstical reached.");
+		break;
+	end
+	dist = dist + 1;
+end
+
+print("Traveld "..dist.." blocks.");

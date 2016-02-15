@@ -1,0 +1,16 @@
+dofile("util");
+ function action(x,y)
+	local a,b = T.inspectDown();
+	if (not a) then 
+		selectItem("minecraft:wheat_seeds");
+		T.placeDown();
+	end
+	if (b.name=="minecraft:wheat") then --> wheat
+		if (b.metadata==7) then --> full grown wheat
+			T.digDown();
+			action(x,y); --> process again
+		end
+	end
+ end
+ 
+ rect(9,9,false,action)

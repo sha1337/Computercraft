@@ -1,0 +1,56 @@
+dofile("util");
+local args = { ... }
+if #args < 1 then
+  print("Invalid use:");
+  print("drill <depth>, [<direction>] ");
+  return
+end
+
+depth = tonumber(args[1]);
+if(#args >= 2) then 
+	dir = string.upper( args[2] );
+else
+	dir = "F";
+end
+
+function moveInDir(d)
+	local d=string.upper(d);
+	if(d=="U" or d=="UP"     )then return T.up     (); end;
+	if(d=="D" or d=="DOWN"   )then return T.down   (); end;
+	if(d=="F" or d=="FORWARD")then return T.forward(); end;
+end
+
+function moveInOppDir(d)
+	local d=string.upper(d);
+	if(d=="U" or d=="UP"     )then return T.down(); end;
+	if(d=="D" or d=="DOWN"   )then return T.up  (); end;
+	if(d=="F" or d=="FORWARD")then return T.back(); end;
+end
+
+
+function digInDir(d)
+	local d=string.upper(d);
+	if(d=="U" or d=="UP"     )then return T.digUp  (); end;
+	if(d=="D" or d=="DOWN"   )then return T.digDown(); end;
+	if(d=="F" or d=="FORWARD")then return T.dig    (); end;
+end
+
+n = 0;
+while true do
+	if (n == depth) then 
+		break;
+	end; --finished
+
+	a = moveInDir(dir); -- try moving
+	if not a then -- no moving possible, try digging
+		s = digInDir(dir);
+		if not s then break; end -- no digging possible, abort
+	else -- sucessfully moved
+		n = n+1;
+	end
+end
+
+for i = 1,n do
+	moveInOppDir(dir);
+end
+print("Drilled a hole "..n.." blocks deep.");

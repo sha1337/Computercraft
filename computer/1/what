@@ -1,0 +1,22 @@
+dofile("util");
+
+su,bu = T.inspectUp();
+if su then
+	print('Up: "'..bu.name..'" (metadata: '..bu.metadata..')' );
+end  
+
+su,bu = T.inspectDown();
+if su then
+	print('Down: "'..bu.name..'" (metadata: '..bu.metadata..')' );
+end  
+
+
+su,bu = T.inspect();
+if su then
+	print('Front: "'..bu.name..'" (metadata: '..bu.metadata..')');
+end
+
+it = T.getItemDetail();
+if (it ~= nil) then
+	print('Item: "'..item.name..'" (damage: '..item.damage..')')
+end
